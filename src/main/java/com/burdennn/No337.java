@@ -1,5 +1,8 @@
 package com.burdennn;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 337. House Robber III {@url https://leetcode.com/problems/house-robber-iii/}
  * <p>
@@ -65,20 +68,49 @@ class TreeNode {
     }
 }
 
+//class Solution337 {
+//    public int rob(TreeNode root) {
+//        if (root == null) {
+//            return 0;
+//        }
+//
+//        int tmp = root.val;
+//        if (root.left != null) {
+//            tmp += rob(root.left.left) + rob(root.left.right);
+//        }
+//        if (root.right != null) {
+//            tmp += rob(root.right.left) + rob(root.right.right);
+//        }
+//
+//        return Math.max(tmp , rob(root.left) + rob(root.right));
+//    }
+//}
+
 class Solution337 {
     public int rob(TreeNode root) {
+        Map<TreeNode, Integer> record = new HashMap<>();
+        return rob(root, record);
+    }
+
+    public int rob(TreeNode root, Map<TreeNode, Integer> record) {
         if (root == null) {
             return 0;
         }
 
-        int tmp = root.val;
-        if (root.left != null) {
-            tmp += rob(root.left.left) + rob(root.left.right);
-        }
-        if (root.right != null) {
-            tmp += rob(root.right.left) + rob(root.right.right);
+        if (record.containsKey(root)) {
+            return record.get(root);
         }
 
-        return Math.max(tmp , rob(root.left) + rob(root.right));
+        int tmp = root.val;
+        if (root.left != null) {
+            tmp += rob(root.left.left, record) + rob(root.left.right, record);
+        }
+        if (root.right != null) {
+            tmp += rob(root.right.left, record) + rob(root.right.right, record);
+        }
+
+        int max = Math.max(tmp , rob(root.left, record) + rob(root.right, record));
+        record.put(root, max);
+        return max;
     }
 }
