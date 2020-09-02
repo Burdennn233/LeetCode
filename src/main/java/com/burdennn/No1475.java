@@ -1,6 +1,7 @@
 package com.burdennn;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 /**
  * 1475. Final Prices With a Special Discount in a Shop {@url https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/}
@@ -39,21 +40,34 @@ public class No1475 {
     }
 }
 
+//class Solution1475 {
+//    public int[] finalPrices(int[] prices) {
+//        int[] res = new int[prices.length];
+//        for (int i = 0; i < prices.length; i++) {
+//            int j = i + 1;
+//            for (; j < prices.length; j++) {
+//                if (prices[i] >= prices[j]) {
+//                    res[i] = prices[i] - prices[j];
+//                    break;
+//                }
+//            }
+//            if (j == prices.length) {
+//                res[i] = prices[i];
+//            }
+//        }
+//        return res;
+//    }
+//}
+
 class Solution1475 {
     public int[] finalPrices(int[] prices) {
-        int[] res = new int[prices.length];
+        Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < prices.length; i++) {
-            int j = i + 1;
-            for (; j < prices.length; j++) {
-                if (prices[i] >= prices[j]) {
-                    res[i] = prices[i] - prices[j];
-                    break;
-                }
+            while (!stack.isEmpty() && prices[stack.peek()] >= prices[i]) {
+                prices[stack.pop()] -= prices[i];
             }
-            if (j == prices.length) {
-                res[i] = prices[i];
-            }
+            stack.push(i);
         }
-        return res;
+        return prices;
     }
 }
