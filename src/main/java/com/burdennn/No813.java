@@ -27,6 +27,29 @@ public class No813 {
     }
 }
 
+//class Solution813 {
+//    public double largestSumOfAverages(int[] A, int K) {
+//        double[] sum = new double[A.length];
+//        sum[0] = A[0];
+//        for (int i = 1; i <= A.length - 1; i++) {
+//            sum[i] = sum[i - 1] + A[i];
+//        }
+//        return subFun(sum, A, 0, K);
+//    }
+//
+//    public double subFun(double[] sum, int[] A, int start, int K) {
+//        int len = sum.length;
+//        if (K <= 1) {
+//            return (sum[len - 1] - sum[start] + A[start]) / (len - start);
+//        }
+//        double max = A[start];
+//        for (int i = start; i + K <= len; i++) {
+//            max = Math.max(max, (sum[i] - sum[start] + A[start]) / (i - start + 1) + subFun(sum, A, i + 1, K -1));
+//        }
+//        return max;
+//    }
+//}
+
 class Solution813 {
     public double largestSumOfAverages(int[] A, int K) {
         double[] sum = new double[A.length];
@@ -34,18 +57,23 @@ class Solution813 {
         for (int i = 1; i <= A.length - 1; i++) {
             sum[i] = sum[i - 1] + A[i];
         }
-        return subFun(sum, A, 0, K);
+        double[][] cache = new double[A.length + 1][K];
+        return subFun(sum, A, 0, K, cache);
     }
 
-    public double subFun(double[] sum, int[] A, int start, int K) {
+    public double subFun(double[] sum, int[] A, int start, int K, double[][] cache) {
         int len = sum.length;
         if (K <= 1) {
-            return (sum[len - 1] - sum[start] + A[start]) / (len - start);
+            cache[start][K - 1] = (sum[len - 1] - sum[start] + A[start]) / (len - start);
+        }
+        if (cache[start][K - 1] != 0) {
+            return cache[start][K - 1];
         }
         double max = A[start];
         for (int i = start; i + K <= len; i++) {
-            max = Math.max(max, (sum[i] - sum[start] + A[start]) / (i - start + 1) + subFun(sum, A, i + 1, K -1));
+            max = Math.max(max, (sum[i] - sum[start] + A[start]) / (i - start + 1) + subFun(sum, A, i + 1, K -1 ,cache));
         }
+        cache[start][K - 1] = max;
         return max;
     }
 }
